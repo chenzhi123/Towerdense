@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Leave.png</file>
+        <file>zhujiemian1.jpg</file>
+        <file>map.jpg</file>
+        <file>ta.png</file>
+    </qresource>
+</RCC>
