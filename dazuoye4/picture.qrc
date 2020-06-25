@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>timg.jfif</file>
+        <file>open_spot.png</file>
+        <file>tower.png</file>
+        <file>monster1.png</file>
+        <file>bullet.png</file>
+        <file>zhujiemian1.jpg</file>
+        <file>Leave.png</file>
+    </qresource>
+</RCC>
