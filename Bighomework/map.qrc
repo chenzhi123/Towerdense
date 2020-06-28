@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>tower.png</file>
+        <file>bullet.png</file>
+        <file>monster1.png</file>
+        <file>open_spot.png</file>
+        <file>timg.jfif</file>
+        <file>Leave.png</file>
+        <file>zhujiemian1.jpg</file>
+        <file>gameover.png</file>
+        <file>map.jpg</file>
+        <file>Worlds Collide.mp3</file>
+        <file>ta.png</file>
+        <file>tower1.jpg</file>
+    </qresource>
+</RCC>
