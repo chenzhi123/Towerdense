@@ -6,21 +6,22 @@
 #include <QPainter>
 #include <QString>
 #include "selectbutton.h"
-
+#include "tower.h"
 class selectButton;
+class Tower;
 class TowerPosition
 {
 public:
-    TowerPosition(QPoint pos,QString path=(":/open_spot.png"));//图片的路径
-    QPoint getCenterPos();//得到防御塔坑的中心点
-    QPoint getPos();//得到防御塔坑的左上点
+    TowerPosition(QPoint pos,QString path=(":/open_spot.png"));
+    QPoint getCenterPos();
+    QPoint getPos();
 
-    bool ContainPos(QPoint pos);//判断pos点是否在防御塔坑的范围内
+    bool ContainPos(QPoint pos);//判断点是否在防御塔坑的范围内
 
     void draw(QPainter * painter) const;
 
-    bool hasTower();//判断该防御塔坑内有没有防御塔
-    void setHasTower(bool hasTower=true);//设置是否有防御塔
+    bool hasTower();
+    void setHasTower(bool hasTower=true);
 
  private:
     QPoint m_pos;

@@ -5,10 +5,10 @@ selectButton::selectButton(QPoint pos,Ks * game):
     m_game(game),
     m_pos(pos)
 {
-    //三张图片的路径信息
-    m_selectBoxImagePath[0]=":/tower.png";
-    m_selectBoxImagePath[1]=":/ta.png";
-    m_selectBoxImagePath[2]=":/tower1.jpg";
+
+    m_selectBoxImagePath[0]=":/ta2.png";
+    m_selectBoxImagePath[1]=":/ta3.png";
+    m_selectBoxImagePath[2]=":/tower.png";
 }
 
 selectButton::~selectButton()

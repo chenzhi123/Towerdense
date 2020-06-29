@@ -10,7 +10,7 @@
 #include <QString>
 #include <QVector2D>
 
-const QSize Enemy::m_fixedSize(22,23);//
+const QSize Enemy::m_fixedSize(50,50);//
 
 Enemy::Enemy(wayPoint * startWayPoint,Ks *game,QString path):
     QObject(0),
@@ -22,13 +22,13 @@ Enemy::Enemy(wayPoint * startWayPoint,Ks *game,QString path):
     m_currentHp=m_maxHp;
     m_walkingSpeed=1;
     m_active=false;
-    m_destinationWayPoint=startWayPoint->getNextWayPoint();//直接从当前航点得到下一个航点
+    m_destinationWayPoint=startWayPoint->getNextWayPoint();//从当前航点得到下一个航点
 }
 
 Enemy::~Enemy()
 {
     m_attackerTowerList.clear();//清楚在攻击该敌人的防御塔
-    m_destinationWayPoint=NULL;//全部设为空指针
+    m_destinationWayPoint=NULL;//设为空指针
     m_game=NULL;
 }
 
@@ -79,8 +79,8 @@ void Enemy::move()
             return ;
         }
     }
-    else//如果还在去目标航点的路上
-    {//采用QVectoer2D中的两点移动方法
+    else
+    {
         QPoint targetPoint=m_destinationWayPoint->getPos();
         double movementSpeed=m_walkingSpeed;
         QVector2D normailzed(targetPoint-m_pos);

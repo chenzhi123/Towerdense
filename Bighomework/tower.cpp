@@ -6,10 +6,24 @@
 #include <QString>
 #include "utility.h"
 const QSize Tower::m_fixedSize(35,35);
-Tower::Tower()
-{
-}
 
+
+Tower::Tower(QPoint pos,Ks * game,QString path,int damage,int range):
+    m_pos(pos),
+    m_path(path),
+    m_level(1),
+    m_attackRange(range),//攻击范围
+    m_game(game),
+    m_attacking(false),
+    m_damage(damage),//攻击力
+    m_fireRate(200),//ms
+
+    m_chooseEnemy(NULL)
+
+{
+    m_fireRateTime=new QTimer(this);
+        connect(m_fireRateTime,SIGNAL(timeout()),this,SLOT(shootWeapon()));
+}
 Tower::~Tower()
 {
     delete m_fireRateTime;
@@ -18,21 +32,6 @@ Tower::~Tower()
     m_game=NULL;
     delete m_chooseEnemy;
 }
-
-Tower::Tower(QPoint pos,Ks * game,QString path,int damage):
-    m_pos(pos),
-    m_path(path),
-    m_attackRange(100),//攻击范围
-    m_game(game),
-    m_attacking(false),
-    m_damage(damage),//攻击力
-    m_fireRate(100),//ms
-    m_chooseEnemy(NULL)
-{
-    m_fireRateTime=new QTimer(this);
-        connect(m_fireRateTime,SIGNAL(timeout()),this,SLOT(shootWeapon()));
-}
-
 void Tower::draw(QPainter *painter) const
 {
     painter->save();
@@ -105,3 +104,4 @@ Enemy * Tower::getAttackedEnemy()
 {
     return m_chooseEnemy;
 }
+

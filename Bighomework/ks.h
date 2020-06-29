@@ -1,6 +1,5 @@
 #ifndef KS_H
 #define KS_H
-
 #include <QMainWindow>
 #include<QPaintEvent>
 #include <QMouseEvent>
@@ -10,7 +9,7 @@
 #include "enemy.h"
 #include "bullet.h"
 #include "selectbutton.h"
-
+#include "selectbutton2.h"
 //QT_BEGIN_NAMESPACE
 namespace Ui { class Ks; }
 //QT_END_NAMESPACE
@@ -19,7 +18,9 @@ class Tower;
 class Enemy;
 class Bullet;
 class selectButton;
+class selectButton2;
 class TowerPosition;
+
 class Ks : public QMainWindow
 {
     Q_OBJECT
@@ -49,6 +50,10 @@ public:
     bool canBuyTower3();//判断是否可以买第三种塔
     void removeButton(selectButton * button);//在mainwindow中对button进行移除
 
+
+    bool canUpdate1();//判断是否可以第一次升级
+    bool canUpdate2();//判断是否可以第二次升级
+
     void doGameOver();//执行游戏结束
 
 protected:
@@ -64,11 +69,12 @@ private:
     QList<Enemy *> m_enemyList;//用来储存敌人的list
     QList<Bullet *> m_bulletList;//用来储存子弹的list
     QList<selectButton * > m_selectButtonList;
-        int m_playerHp;//基地的血量
-        int m_playerGlod;//初始金钱
-        int m_waves;//波数
-        bool m_gameWin;
-        bool m_gameLose;
+    QList<selectButton2 *> m_selectButton2List;//用来储存selectButton2的list
+    int m_playerHp;//基地的血量
+    int m_playerGlod;//初始金钱
+    int m_waves;//波数
+    bool m_gameWin;
+    bool m_gameLose;
 private slots:
     //私有信号槽，将Enemy，Tower和后续的Bullet连接
     void updateMap();

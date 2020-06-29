@@ -10,16 +10,17 @@
 #include "ks.h"
 #include<QtCore/qmath.h>
 #include<QMediaPlayer>
+QMediaPlayer *player1 = new QMediaPlayer;//主界面音乐
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     this->setFixedSize(1000,600);
     ui->setupUi(this);
-    QMediaPlayer *player1 = new QMediaPlayer;//主界面音乐
-    player1->setMedia(QUrl("qrc:/Worlds Collide.mp3"));//
+
+   /* player1->setMedia(QUrl("qrc:/Worlds Collide.mp3"));//
     player1->setVolume(30);
-    player1->play();
+    player1->play();*/
     Button*btn = new Button(":/Leave.png");//进入游戏的按钮
     btn->setParent(this);
     btn->move(450,400);
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
         connect(scene,&Ks::chooseback,this,[=](){
             scene->hide();
             this->show();
+            player1->stop();
         });//回到主界面
 
     });

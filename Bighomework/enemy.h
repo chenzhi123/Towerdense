@@ -20,7 +20,7 @@ class Enemy:public QObject
 {
     Q_OBJECT
 public:
-    Enemy(wayPoint * startPoint, Ks * game,QString path=":/monster1.png");
+    Enemy(wayPoint * startPoint, Ks * game,QString path=":/enemy.png");
     ~Enemy();
     void draw(QPainter * painter)const;
     void move();//敌人的移动
@@ -42,8 +42,8 @@ private:
     int m_walkingSpeed;//移动速度
     bool m_active;//是否可以移动
 
-    wayPoint * m_destinationWayPoint;//目标航点的指针
-    Ks * m_game;//mainwindow的指针
+    wayPoint * m_destinationWayPoint;
+    Ks * m_game;
     QPoint m_pos;//当前位置
     QString m_path;//图片路径
     QList<Tower *> m_attackerTowerList;//正在攻击该敌人的防御塔list

@@ -7,10 +7,13 @@
 #include "enemy.h"
 #include "button.h"
 #include "selectbutton.h"
+#include "selectbutton2.h"
 #include<QMediaPlayer>
-static const int tower1Cost=300;//第一种塔的价钱
-static const int tower2Cost=400;//第二种
-static const int tower3Cost=500;//第三种
+#include "mainwindow.h"
+static const int tower1Cost=250;//第一种塔的价钱
+static const int tower2Cost=500;//第二种塔的价钱
+static const int tower3Cost=750;//第三种塔的价钱
+QMediaPlayer *player2 = new QMediaPlayer;//游戏音乐
 Ks::Ks(QWidget *parent)
     : QMainWindow(parent)
     , m_playerHp(5)
@@ -21,7 +24,7 @@ Ks::Ks(QWidget *parent)
 
 {
     this->setFixedSize(1000,600);
-    addWayPoint1();//增加航点函数的调用
+    addWayPoint1();
     loadTowerPosition1();
     QTimer * timer=new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateMap()));
@@ -33,6 +36,12 @@ Ks::Ks(QWidget *parent)
     connect(backbtn,&Button::clicked,this,[=](){
         emit chooseback();
     });
+    QMediaPlayer *player2 = new QMediaPlayer;//游戏音乐
+    player2->setMedia(QUrl("qrc:/gamebgm.mp3"));//
+    player2->setVolume(2);
+    player2->play();
+
+
 }
 
 Ks::~Ks()
@@ -41,20 +50,37 @@ Ks::~Ks()
 }
 void Ks::paintEvent(QPaintEvent*)
 {
-    //添加在函数的前端
-    if(m_gameLose || m_gameWin)//画出游戏结束的画面
+    player2->play();
+    if(m_gameLose)
         {
-            QString text=m_gameLose ? "YOU LOST":"YOU WIN";
+            player2->stop();
+            QMediaPlayer *player3 = new QMediaPlayer;//失败音乐
+            player3->setMedia(QUrl("qrc:/"));//
+            player3->setVolume(30);
+            player3->play();
+
+            QString text="Defeat";
             QPainter painter(this);
             painter.setPen(Qt::red);
             painter.drawText(rect(),Qt::AlignCenter,text);
             return ;
         }
-
+else if(m_gameWin)
+    {
+        player2->stop();
+        QMediaPlayer *player4 = new QMediaPlayer;//胜利音乐
+        player4->setMedia(QUrl("qrc:/"));//
+        player4->setVolume(30);
+        player4->play();
+        QString text="Victory";
+        QPainter painter(this);
+        painter.setPen(Qt::red);
+        painter.drawText(rect(),Qt::AlignCenter,text);
+        return ;
+    }
     QPainter painter(this);
-    QString path(":/map.jpg");//path是图片的路径
+    QString path(":/map.jpg");
     painter.drawPixmap(0,0,1000,600,path);
-    //drawPixmap的前四个参数代表的分别是，图片左上角的横坐标，图片左上角的纵坐标，图片的width，图片的height
     foreach(const wayPoint * waypoint,m_wayPointList)
             waypoint->draw(&painter);
     foreach(const TowerPosition towerposition,m_towerPositionList)
@@ -67,9 +93,10 @@ void Ks::paintEvent(QPaintEvent*)
             bullet->draw(&painter);
     foreach(const selectButton * button,m_selectButtonList)
             button->draw(&painter);
-        drawHp(&painter);
-        drawGlod(&painter);
-        drawWaves(&painter);
+
+    drawHp(&painter);
+    drawGlod(&painter);
+    drawWaves(&painter);
 
 }
 void Ks::addWayPoint1(){
@@ -124,39 +151,39 @@ void Ks::loadTowerPosition1()
 }
 void Ks::mousePressEvent(QMouseEvent * event)
 {
-    QPoint pressPos=event->pos();//得到鼠标点击的位置
+    QPoint pressPos=event->pos();
     auto it=m_towerPositionList.begin();
-    while(it!=m_towerPositionList.end())//遍历所有的防御塔坑
+    while(it!=m_towerPositionList.end())
         {
-            if(Qt::LeftButton==event->button())//如果是鼠标左键点击
+        if(Qt::LeftButton==event->button())//左键点击
+        {//左键点击实现防御塔选择
+            if(it->ContainPos(pressPos) && !it->hasButton() && !it->hasTower() )
             {
-                if(!it->hasButton() && it->ContainPos(pressPos) && !it->hasTower())//如果没有button，点击的点在防御塔坑的内部
-                {
-                    QPoint tmp(it->getPos().x()-35,it->getPos().y()-35);//得到该防御塔坑处的button的左上点
-                    selectButton * button=new selectButton(tmp,this);//创建一个button
-                    it->setHasButton(true);//设置该位置有button
-                    it->setButton(button);//设置该位置的button
-                    m_selectButtonList.push_back(button);//把这个button加入到mainwidnow中
-                    update();
-                    break;
-                }
-                else if(it->hasButton() && it->getButton()->containPos(pressPos) && !it->hasTower())//如果这个位置有button，并且没有防御塔
+                QPoint tmp(it->getPos().x()-45,it->getPos().y()-45);
+                selectButton * button=new selectButton(tmp,this);
+                m_selectButtonList.push_back(button);//
+                it->setButton(button);
+                it->setHasButton(true);
+                update();
+                break;
+            }
+                          else if(it->hasButton() && it->getButton()->containPos(pressPos) && !it->hasTower())//如果这个位置有button，并且没有防御塔
                 {
                     if(pressPos.x()<it->getButton()->getPos().x()+35 && canBuyTower())//如果鼠标点击的地方在第一张图片内，创造第一个防御塔
                     {
                         it->setHasTower1(true);
                         m_playerGlod-=tower1Cost;
-                        QString path=":/tower.png";
-                        Tower * tower=new Tower(it->getCenterPos(),this,path,10);//攻击力为10的第一种防御塔
+                        QString path=":/ta2.png";
+                        Tower * tower=new Tower(it->getCenterPos(),this,path,2,100);//
                         m_towerList.push_back(tower);
                     }
                     else if(pressPos.x()>it->getButton()->getPos().x()+35 && pressPos.x()<it->getButton()->getPos().x()+70
-                            && canBuyTower2())//鼠标点击点在第二张图片内，创建第二种防御塔
+                            && canBuyTower2())
                     {
                         it->setHasTower2(true);
                         m_playerGlod-=tower2Cost;
-                        QString path=":/ta.png";
-                        Tower * tower=new Tower(it->getCenterPos(),this,path,15);//攻击力为15的第二种防御塔
+                        QString path=":/ta3.png";
+                        Tower * tower=new Tower(it->getCenterPos(),this,path,4,120);//
                         m_towerList.push_back(tower);
                     }
                     else if(pressPos.x()>it->getButton()->getPos().x()+70 && pressPos.x()<it->getButton()->getPos().x()+105
@@ -164,11 +191,11 @@ void Ks::mousePressEvent(QMouseEvent * event)
                     {
                         it->setHasTower3(true);
                         m_playerGlod-=tower3Cost;
-                        QString path=":/tower1.jpg";
-                        Tower * tower=new Tower(it->getCenterPos(),this,path,20);
+                        QString path=":/tower.png";
+                        Tower * tower=new Tower(it->getCenterPos(),this,path,6,140);
                         m_towerList.push_back(tower);
                     }
-                    //构造完防御塔后，原来的button就要消失，下面对该button进行移除
+
                     it->getButton()->getRemoved();
                     it->setButton(NULL);
                     it->setHasButton(false);
@@ -176,13 +203,13 @@ void Ks::mousePressEvent(QMouseEvent * event)
                     break;
                 }
             }
-            ++it;
+                 ++it;
         }
 
 }
 void Ks::getHpDamaged()
 {
-    m_playerHp-=1;//敌人进入基地，扣一滴血
+    m_playerHp-=1;//进入基地减一滴血
     if(m_playerHp<=0)
     {
         doGameOver();
@@ -219,14 +246,14 @@ bool Ks::loadWaves()
     {
         return false;
     }
-    int enemyStartInterval[]={100,500,750,1000,3000,6000};//敌人出现的时间
+    int enemyStartInterval[]={2000,3000,4000,5000,6000,7000};//敌人出现的时间
     for(int i=0;i<6;++i)
     {
         wayPoint * startWayPoint;
         startWayPoint=m_wayPointList.first();
         Enemy * enemy=new Enemy(startWayPoint,this);//创建一个新的enemy
         m_enemyList.push_back(enemy);
-        enemy->HpUP(40+15*m_waves);//随着波数增加，怪物的血量一波增加15点
+        enemy->HpUP(40+60*m_waves);//随着波数增加，怪物的血量一波增加60点
         QTimer::singleShot(enemyStartInterval[i],enemy,SLOT(doActive()));
     }
     return true;
@@ -252,16 +279,6 @@ void Ks::doGameOver()
         m_gameLose=true;
     }
 }
-
-bool Ks::canBuyTower()
-{
-    if(m_playerGlod>=400)
-    {
-        return true;
-    }
-    return false;
-}
-
 void Ks::drawWaves(QPainter *painter) const
 {
     painter->save();
@@ -297,15 +314,24 @@ void Ks::addBullet(Bullet *bullet)
     Q_ASSERT(bullet);
     m_bulletList.push_back(bullet);
 }
+bool Ks::canBuyTower()
+{
+    if(m_playerGlod>=tower1Cost)
+    {
+        return true;
+    }
+    return false;
+}
+
 bool Ks::canBuyTower2(){
-    if(m_playerGlod>=400)
+    if(m_playerGlod>=tower2Cost)
         {
             return true;
         }
         return false;
 }
 bool Ks::canBuyTower3(){
-    if(m_playerGlod>=500)
+    if(m_playerGlod>=tower3Cost)
         {
             return true;
         }
@@ -314,3 +340,4 @@ bool Ks::canBuyTower3(){
 void Ks::removeButton(selectButton *button){
     m_selectButtonList.removeOne(button);
 }
+

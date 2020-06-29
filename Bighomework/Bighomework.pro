@@ -25,7 +25,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     selectbutton.cpp \
-    selectbutton2.cpp \
     tower.cpp \
     towerposition.cpp \
     utility.cpp \
@@ -38,7 +37,6 @@ HEADERS += \
     ks.h \
     mainwindow.h \
     selectbutton.h \
-    selectbutton2.h \
     tower.h \
     towerposition.h \
     utility.h \

@@ -1,11 +1,8 @@
 #include "towerposition.h"
-
 #include <QSize>
 #include <QPainter>
 #include <QPixmap>
-
 const QSize TowerPosition::m_fixedSize(35,35);//设置图片的大小
-
 TowerPosition::TowerPosition(QPoint pos, QString path):
     m_pos(pos),
     m_path(path),
@@ -105,3 +102,4 @@ bool TowerPosition::hasTower3()
 {
     return m_hasTower3;
 }
+
